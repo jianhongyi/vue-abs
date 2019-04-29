@@ -36,6 +36,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      'element-ui': resolve('node_modules/element-ui-jd')
     }
   },
   module: {
@@ -52,10 +53,20 @@ module.exports = {
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
+        include: [resolve('src/icons')],
+        options: {
+          symbolId: 'icon-[name]'
+        }
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
+        exclude: [resolve('src/icons')],
         options: {
-          limit: 10000,
+          limit: 0,
+          publicPath: process.env.NODE_ENV === 'production' ? '../../' : '/',
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
       },
