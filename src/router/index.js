@@ -15,6 +15,13 @@ export default new Router({
       path: '/login',
       component: () => import('@/views/login/index'),
       hidden: true
+    },
+    {
+      path: '/layout',
+      name: 'Layout',
+      meta: { title: 'Layout' },
+      component: () => import('@/views/layout/index'),
+      hidden: true
     }
   ]
 })

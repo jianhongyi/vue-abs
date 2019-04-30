@@ -14,10 +14,14 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test",
-      "...": "..."
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+      "src/**/*.{js,vue}": [
+        "eslint --fix",
+        "git add"
+      ]
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -27,6 +31,7 @@
     "node-sass": "^4.11.0",
     "normalize.css": "^8.0.1",
     "sass-loader": "^7.1.0",
+    "screenfull": "^4.2.0",
     "vue": "^2.5.2",
     "vue-i18n": "^8.11.1",
     "vue-router": "^3.0.1",

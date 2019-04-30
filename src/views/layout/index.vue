@@ -2,14 +2,28 @@
 <template>
   <div class="app-wrapper">
     <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
-
+    <sidebar class="sidebar-container"/>
+    <div class="main-container">
+      <navbar/>
+      <tags-view/>
+      <app-main/>
+      <el-button type="primary">测试</el-button>
+    </div>
   </div>
 </template>
 
 <script>
-
+import Sidebar from './Sidebar'
+import Navbar from './Navbar'
+import TagsView from './TagsView'
+import AppMain from './AppMain'
 export default {
-  components: {},
+  components: {
+    Sidebar,
+    Navbar,
+    TagsView,
+    AppMain
+  },
   data() {
     return {
     }
