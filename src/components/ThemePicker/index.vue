@@ -1,13 +1,13 @@
 <!--  -->
 <template>
   <el-color-picker
-    v-nodel="theme"
+    v-model="theme"
     class="theme-picker"
     popper-class="theme-picker-dropdown"/>
 </template>
 
 <script>
-// const version = require('element-ui/package.json').version
+const version = require('element-ui/package.json').version
 const ORIGINAL_THEME = '#409EFF'
 export default {
   components: {},
@@ -23,14 +23,71 @@ export default {
       if (typeof val !== 'string') {
         return
       }
-    //   const themeCluster = this.getThemeCluster(val.replace('#', ''))
-    //   const originalCluster = this.getThemeCluster(oldVal.replace('#', ''))
+      const themeCluster = this.getThemeCluster(val.replace('#', ''))
+      const originalCluster = this.getThemeCluster(oldVal.replace('#', ''))
+      const getHandler = (variable, id) => {
+        return () => {
+          const originalCluster = this.getThemeCluster(ORIGINAL_THEME.replace('#', ''))
+          const newStyle = this.updateStyle(this[variable], originalCluster, themeCluster)
+          let styleTag = document.getElementById(id)
+          if (!styleTag) {
+            styleTag = document.createElement('style')
+            styleTag.setAttribute('id', id)
+            document.head.appendChild(styleTag)
+          }
+          styleTag.innerText = newStyle
+        }
+      }
+      const chalkHandler = getHandler('chalk', 'chalk-style')
+      if (!this.chalk) {
+        const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
+        this.getCSSString(url, chalkHandler, 'chalk')
+      } else {
+        chalkHandler()
+      }
+
+      const styles = [].slice.call(document.querySelectorAll('style'))
+        .filter(style => {
+          const text = style.innerText
+          return new RegExp(oldVal, 'i').test(text) && !/Chalk Variables/.test(text)
+        })
+      styles.forEach(item => {
+        const { innerText } = item
+        if (typeof innerText !== 'string') {
+          return
+        }
+        item.innerText = this.updateStyle(innerText, originalCluster, themeCluster)
+      })
+      this.$message({
+        message: '切换成功',
+        type: 'success'
+      })
     }
   },
 
   mounted() {},
 
   methods: {
+    getCSSString(url, callback, variable) {
+      const xhr = new XMLHttpRequest()
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            this[variable] = xhr.responseText.replace(/@font-face{[^}]+}/, '')
+            callback
+          }
+        }
+      }
+      xhr.open('GET', url)
+      xhr.send()
+    },
+    updateStyle(style, oldCluster, newCluster) {
+      let newStyle = style
+      oldCluster.forEach((item, index) => {
+        newStyle = newStyle.replace(new RegExp(item, 'ig'), newCluster[index])
+      })
+      return newStyle
+    },
     getThemeCluster(theme) {
       const tintColor = (color, tint) => {
         let red = parseInt(color.slice(0, 2), 16)
@@ -78,5 +135,12 @@ export default {
 }
 
 </script>
-<style lang='scss' scoped>
+<style lang='scss'>
+.theme-picker .el-color-picker__trigger {
+  vertical-align: middle;
+}
+
+.theme-picker-dropdown .el-color-dropdown__link-btn {
+  display: none;
+}
 </style>

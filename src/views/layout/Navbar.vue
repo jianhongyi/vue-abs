@@ -11,10 +11,33 @@
         <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
           <SizeSelect class="international right-menu-item"/>
         </el-tooltip>
-        <el-tooltip :content="$t('navbar.theme')" :effect="dark" placement="bottom">
+        <lang-select class="international right-menu-item"/>
+        <el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">
           <theme-picker class="theme-switch right-menu-item"/>
         </el-tooltip>
       </template>
+
+      <el-dropdown class="avatar-container right-menu-item" trigger="click">
+        <div class="avatar-wrapper">
+          <img :src="avatar" class="user-avatar">
+          <i class="el-icon-caret-bottom"/>
+        </div>
+        <el-dropdown-menu slot="dropdown">
+          <router-link to="/">
+            <el-dropdown-item>
+              {{ $t('navbar.dashboard') }}
+            </el-dropdown-item>
+          </router-link>
+          <a target="_blank" href="http://www.badu.com">
+            <el-dropdown-item>
+              {{ $t('navbar.github') }}
+            </el-dropdown-item>
+          </a>
+          <el-dropdown-item divided>
+            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -26,13 +49,15 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import ThemePicker from '@/components/ThemePicker'
+import LangSelect from '@/components/LangSelect'
 export default {
   components: {
     Hamburger,
     Breadcrumb,
     Screenfull,
     SizeSelect,
-    ThemePicker
+    ThemePicker,
+    LangSelect
   },
   data() {
     return {
@@ -40,16 +65,25 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'name',
+      'avatar',
+      'device'
     ])
   },
 
   mounted() {
+    console.log(this.$store.getters)
   },
 
   methods: {
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar')
+    },
+    logout() {
+      this.$store.dispatch('logOut').then(() => {
+        location.reload()
+      })
     }
   }
 }

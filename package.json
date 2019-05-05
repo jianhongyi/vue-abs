@@ -18,10 +18,10 @@
     }
   },
   "lint-staged": {
-      "src/**/*.{js,vue}": [
-        "eslint --fix",
-        "git add"
-      ]
+    "src/**/*.{js,vue}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "dependencies": {
     "axios": "^0.18.0",

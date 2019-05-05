@@ -25,7 +25,6 @@ export default {
 
   mounted() {
     this.getBreadcrumb()
-    console.log(this.levelList)
   },
 
   methods: {
@@ -38,7 +37,7 @@ export default {
       })
       const first = matched[0]
       if (first && first.name.trim().toLocaleLowerCase() !== 'Dashboard'.toLocaleLowerCase()) {
-        matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
+        matched = [{ path: '/dashboard', meta: { title: 'dashboard' }}].concat(matched)
       }
       this.levelList = matched
     }
